@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alterview.Infrastructure", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B60451EB-2DDE-4043-A86D-D23CE63D5472}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alterview.ImportService", "src\Alterview.ImportService\Alterview.ImportService.csproj", "{3C48D9D5-8E83-443F-B552-A4B33A2C669B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alterview.ImportService", "src\Alterview.ImportService\Alterview.ImportService.csproj", "{3C48D9D5-8E83-443F-B552-A4B33A2C669B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
