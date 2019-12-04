@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Alterview.Core.Interfaces;
+using Alterview.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +17,7 @@ namespace Alterview.Web
 {
     public class Startup
     {
+        private const string DefaultConnectionName = "Default";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,6 +27,9 @@ namespace Alterview.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            string connectionString = Configuration.GetConnectionString(DefaultConnectionName);
+            services.AddSingleton<IEventsRepository>(s => new EventsRepository(connectionString));
+            services.AddSingleton<ISportsRepository>(s => new SportsRepository(connectionString));
             services.AddControllers();
         }
  
