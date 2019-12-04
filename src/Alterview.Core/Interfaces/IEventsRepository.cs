@@ -11,5 +11,6 @@ namespace Alterview.Core.Interfaces
         Task<SportEvent> GetEventById(int id);
         Task<IEnumerable<SportEvent>> GetEventsBySportAndDate(int sportId, DateTime date);
         Task<int> UpdateEvent(SportEvent ev);
+        Task<int> InsertEvent(SportEvent ev);
     }
 }
