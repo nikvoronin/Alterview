@@ -15,22 +15,22 @@ namespace Alterview.Infrastructure.Data
 
         public Task<SportEvent> GetEventById(int id)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<SportEvent>(null);
         }
 
         public Task<IEnumerable<SportEvent>> GetEventsBySportAndDate(int sportId, DateTime date)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<IEnumerable<SportEvent>>(null);
         }
 
         public override int InitializeSchema()
         {
-            throw new NotImplementedException();
+            return 0;
         }
 
         public Task<int> UpdateEvent(SportEvent ev)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
     }
 }

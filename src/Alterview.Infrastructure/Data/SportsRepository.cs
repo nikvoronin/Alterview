@@ -15,12 +15,12 @@ namespace Alterview.Infrastructure.Data
 
         public Task<IEnumerable<SportInfo>> GetSportsWithEventsCount()
         {
-            throw new NotImplementedException();
+            return Task.FromResult<IEnumerable<SportInfo>>(null);
         }
 
         public override int InitializeSchema()
         {
-            throw new NotImplementedException();
+            return 0;
         }
     }
 }
