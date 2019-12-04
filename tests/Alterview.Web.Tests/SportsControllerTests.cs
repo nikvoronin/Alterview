@@ -23,7 +23,7 @@ namespace Alterview.Web.Tests
             var sportsRepo = new SportsRepository("");
 
             SportsController spControl = new SportsController(logMock.Object, eventsRepo, sportsRepo);
-            var result = await spControl.GetAll();
+            var result = await spControl.Get();
             Assert.NotNull(result);
 
             Assert.IsType<BadRequestResult>(result);
@@ -48,7 +48,7 @@ namespace Alterview.Web.Tests
                 .ReturnsAsync(expected);
 
             SportsController spControl = new SportsController(logMock.Object, eventsRepoMock.Object, sportsRepoMock.Object);
-            var result = await spControl.GetAll();
+            var result = await spControl.Get();
             Assert.NotNull(result);
 
             Assert.IsType<JsonResult>(result);

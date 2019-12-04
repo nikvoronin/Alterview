@@ -26,7 +26,7 @@ namespace Alterview.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{sportId}/events/date/{dt}")]
+        [Route("{sportId:int:min(1)}/events/date/{dt}")]
         public async Task<IActionResult> Get(int sportId, DateTime dt)
         {
             IActionResult result = BadRequest();
@@ -40,8 +40,7 @@ namespace Alterview.Web.Controllers
         }
 
         [HttpGet]
-        [Route("info")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> Get()
         {
             IActionResult result = BadRequest();
 

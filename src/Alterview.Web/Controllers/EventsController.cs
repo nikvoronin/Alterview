@@ -21,7 +21,7 @@ namespace Alterview.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int:min(1)}")]
         public async Task<IActionResult> Get(int id)
         {
             IActionResult result = BadRequest();
