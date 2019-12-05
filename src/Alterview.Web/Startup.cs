@@ -18,19 +18,31 @@ namespace Alterview.Web
     public class Startup
     {
         private const string DefaultConnectionName = "Default";
+        private const string ControllersSectionName = "Controllers";
+        private const string SuppressMapClientErrorsKey = "SuppressMapClientErrors";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
+        internal bool SuppressMapClientErrorsValue => (bool)(Configuration
+                        ?.GetSection(ControllersSectionName)
+                        ?.GetValue(typeof(bool), SuppressMapClientErrorsKey)
+                        ?? false);
 
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString(DefaultConnectionName);
             services.AddSingleton<IEventsRepository>(s => new EventsRepository(connectionString));
             services.AddSingleton<ISportsRepository>(s => new SportsRepository(connectionString));
-            services.AddControllers();
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressMapClientErrors = SuppressMapClientErrorsValue;
+                });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
