@@ -34,7 +34,9 @@ namespace Alterview.Web.Controllers
             var events = await _eventsRepo.GetEventsBySportAndDate(sportId, dt);
 
             if (events != null)
+            {
                 result = new JsonResult(events);
+            }
 
             return result;
         }
@@ -47,7 +49,9 @@ namespace Alterview.Web.Controllers
             var sports = await _sportRepo.GetSportsWithEventsCount();
 
             if (sports != null)
+            {
                 result = new JsonResult(sports);
+            }
 
             return result;
         }

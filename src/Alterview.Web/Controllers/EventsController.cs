@@ -29,7 +29,9 @@ namespace Alterview.Web.Controllers
             var ev = await _eventsRepo.GetEventById(id);
 
             if (ev != null)
+            {
                 result = new JsonResult(ev);
+            }
 
             return result;
         }

@@ -34,10 +34,11 @@ namespace Alterview.Web.Tests
         [Fact]
         public async void SportsController_GetAll_JsonResult()
         {
-            SportInfo[] expected = new SportInfo[] {
-                new SportInfo(){ SportId = 1, Name = "First", EventsCount = 12 },
-                new SportInfo(){ SportId = 2, Name = "Second", EventsCount = 23 },
-                new SportInfo(){ SportId = 3, Name = "Third", EventsCount = 34 },
+            SportInfo[] expected = new SportInfo[] 
+            {
+                new SportInfo() { SportId = 1, Name = "First", EventsCount = 12 },
+                new SportInfo() { SportId = 2, Name = "Second", EventsCount = 23 },
+                new SportInfo() { SportId = 3, Name = "Third", EventsCount = 34 },
             };
 
             var logMock = new Mock<ILogger<SportsController>>();
@@ -58,14 +59,18 @@ namespace Alterview.Web.Tests
             var pairs = expected.Zip(actual, (exp, act) => new { Expected = exp, Actual = act });
 
             foreach (var p in pairs)
+            {
                 Assert.Equal(p.Expected, p.Actual);
+            }
         }
 
         [Fact]
         public async void SportsController_GetEventsBySportAndDate_JsonResult()
         {
-            SportEvent[] expected = new SportEvent[] {
-                new SportEvent() {
+            SportEvent[] expected = new SportEvent[]
+            {
+                new SportEvent()
+                {
                     EventId = 1,
                     SportId = 2,
                     EventName = "Fake Event",
@@ -74,7 +79,8 @@ namespace Alterview.Web.Tests
                     Team2Price = 4.56M,
                     DrawPrice = 7.89M
                 },
-                new SportEvent() {
+                new SportEvent()
+                {
                     EventId = 2,
                     SportId = 3,
                     EventName = "FFake EEvent",
@@ -83,7 +89,7 @@ namespace Alterview.Web.Tests
                     Team2Price = 6.54M,
                     DrawPrice = 9.87M
                 },
-        };
+            };
 
             var logMock = new Mock<ILogger<SportsController>>();
             var eventsRepoMock = new Mock<IEventsRepository>();
@@ -103,7 +109,9 @@ namespace Alterview.Web.Tests
             var pairs = expected.Zip(actual, (exp, act) => new { Expected = exp, Actual = act });
 
             foreach (var p in pairs)
+            {
                 Assert.Equal(p.Expected, p.Actual);
+            }
         }
     }
 }

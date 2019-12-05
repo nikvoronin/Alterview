@@ -20,12 +20,14 @@ namespace Alterview.Infrastructure.Data
             string query = "SELECT * FROM Events WHERE SportId = @SportId AND EventDate >= @DateStart AND EventDate < @DateEnd";
             IEnumerable<SportEvent> result = null;
 
-            try {
+            try
+            {
                 DateTime dateStart = date.Date;
                 DateTime dateNext = dateStart.AddDays(1);
                 result = await db.QueryAsync<SportEvent>(
                     query,
-                    new {
+                    new
+                    {
                         SportId = sportId,
                         DateStart = dateStart,
                         DateEnd = dateNext
@@ -54,9 +56,11 @@ namespace Alterview.Infrastructure.Data
             using var db = Connection;
 
             int rows = 0;
-            try {
+            try
+            {
                 rows = await db.ExecuteAsync("UpsertEvent",
-                    new {
+                    new
+                    {
                         EventId = ev.EventId,
                         SportId = ev.SportId,
                         EventName = ev.EventName,
@@ -78,7 +82,8 @@ namespace Alterview.Infrastructure.Data
             string query = "SELECT * FROM Events WHERE EventId = @EventId";
 
             SportEvent result = null;
-            try {
+            try
+            {
                 result = await db.QueryFirstOrDefaultAsync<SportEvent>(query, new { EventId = id });
             }
             catch { }
@@ -103,7 +108,8 @@ namespace Alterview.Infrastructure.Data
 
             var result = 0;
 
-            try {
+            try
+            {
                 result = db.Execute(query);
             }
             catch { }

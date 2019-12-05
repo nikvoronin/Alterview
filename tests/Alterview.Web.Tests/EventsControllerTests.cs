@@ -1,4 +1,4 @@
-using Alterview.Core.Interfaces;
+﻿using Alterview.Core.Interfaces;
 using Alterview.Core.Models;
 using Alterview.Infrastructure.Data;
 using Alterview.Web.Controllers;
@@ -34,7 +34,8 @@ namespace Alterview.Web.Tests
             var evRepoMock = new Mock<IEventsRepository>();
 
             SportEvent expectedEvent =
-                new SportEvent() {
+                new SportEvent()
+                {
                     EventId = 1,
                     SportId = 2,
                     EventName = "Fake Event",

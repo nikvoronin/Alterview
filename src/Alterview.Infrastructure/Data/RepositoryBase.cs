@@ -17,7 +17,8 @@ namespace Alterview.Infrastructure.Data
 
         public IDbConnection Connection
         {
-            get {
+            get
+            {
                 return new SqlConnection(_connectionString);
             }
         }
