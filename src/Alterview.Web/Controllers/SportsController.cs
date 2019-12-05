@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Alterview.Core.Interfaces;
+using Alterview.Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Alterview.Web.Controllers
 {
+    [ApiController]
     [Route("api/sports")]
-    public class SportsController : Controller
+    public class SportsController : ControllerBase
     {
         private readonly ILogger<SportsController> _logger;
         private readonly IEventsRepository _eventsRepo;
@@ -26,34 +29,38 @@ namespace Alterview.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{sportId:int:min(1)}/events/date/{dt}")]
-        public async Task<IActionResult> Get(int sportId, DateTime dt)
+        [Route("{sportId}/events/date/{dt}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<SportEvent>>> Get(int sportId, DateTime dt)
         {
-            IActionResult result = BadRequest();
+            var events = await _eventsRepo.GetEventsBySportAndDate(sportId, dt) as List<SportEvent>;
 
-            var events = await _eventsRepo.GetEventsBySportAndDate(sportId, dt);
-
-            if (events != null)
+            if (events != null && events.Count > 0)
             {
-                result = new JsonResult(events);
+                return events;
             }
-
-            return result;
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<SportInfo>>> Get()
         {
-            IActionResult result = BadRequest();
+            var sports = await _sportRepo.GetSportsWithEventsCount() as List<SportInfo>;
 
-            var sports = await _sportRepo.GetSportsWithEventsCount();
-
-            if (sports != null)
+            if (sports != null && sports.Count > 0)
             {
-                result = new JsonResult(sports);
+                return sports;
             }
-
-            return result;
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
