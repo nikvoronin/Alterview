@@ -1,4 +1,4 @@
-using Alterview.Core.Interfaces;
+﻿using Alterview.Core.Interfaces;
 using Alterview.Core.Models;
 using Alterview.Infrastructure.Data;
 using Alterview.Web.Controllers;
@@ -13,28 +13,31 @@ namespace Alterview.Web.Tests
     public class EventsControllerTests
     {
         [Fact]
-        public async void EventsController_GetById_ResponseWithBadRequest_WhenNoDbConnection()
+        public async void EventsController_GetById_NotFound_WhenNoDbConnection()
         {
             var logMock = new Mock<ILogger<EventsController>>();
             var evRepo = new EventsRepository("");
 
-            EventsController evControl = new EventsController(logMock.Object, evRepo);
+            var evControl = new EventsController(logMock.Object, evRepo);
             var result = await evControl.Get(1);
             Assert.NotNull(result);
 
-            Assert.IsType<BadRequestResult>(result);
-            var br = (BadRequestResult)result;
-            Assert.True(br.StatusCode == 400);
+            Assert.IsType<ActionResult<SportEvent>>(result);
+            Assert.NotNull(result.Result);
+            Assert.IsType<NotFoundResult>(result.Result);
+            Assert.True(result.Value == null);
+            Assert.True((result.Result as NotFoundResult).StatusCode == 404);
         }
 
         [Fact]
-        public async void EventsController_GetById_JsonResult()
+        public async void EventsController_GetById_PositiveResult()
         {
             var logMock = new Mock<ILogger<EventsController>>();
             var evRepoMock = new Mock<IEventsRepository>();
 
-            SportEvent expectedEvent =
-                new SportEvent() {
+            var expectedEvent =
+                new SportEvent()
+                {
                     EventId = 1,
                     SportId = 2,
                     EventName = "Fake Event",
@@ -48,16 +51,16 @@ namespace Alterview.Web.Tests
                 r => r.GetEventById(It.IsAny<int>()))
                 .ReturnsAsync(expectedEvent);
 
-            EventsController evControl = new EventsController(logMock.Object, evRepoMock.Object);
+            var evControl = new EventsController(logMock.Object, evRepoMock.Object);
             var result = await evControl.Get(1);
+            
             Assert.NotNull(result);
-            Assert.IsType<JsonResult>(result);
+            Assert.True(result.Result == null);
+            Assert.IsType<ActionResult<SportEvent>>(result);
+            Assert.IsType<SportEvent>(result.Value);
+            Assert.NotNull(result.Value);
 
-            var jsonResult = (JsonResult)result;
-            Assert.IsType<SportEvent>(jsonResult.Value);
-            SportEvent actualEvent = (SportEvent)jsonResult.Value;
-
-            Assert.Equal(expectedEvent, actualEvent);
+            Assert.Equal(expectedEvent, result.Value);
         }
     }
 }

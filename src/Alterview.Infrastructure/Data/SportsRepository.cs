@@ -19,7 +19,8 @@ namespace Alterview.Infrastructure.Data
             string query = $"SELECT Sports.SportId, Sports.Name, COUNT(Events.EventId) AS EventsCount FROM Sports LEFT JOIN Events ON Sports.SportId = Events.SportId GROUP BY Sports.SportId, Sports.Name";
 
             IEnumerable<SportInfo> result = null;
-            try {
+            try
+            {
                 result = await db.QueryAsync<SportInfo>(query);
             }
             catch { }

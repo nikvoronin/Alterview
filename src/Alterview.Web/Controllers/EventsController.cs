@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Alterview.Core.Interfaces;
+using Alterview.Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Alterview.Web.Controllers
 {
+    [ApiController]
     [Route("api/events")]
-    public class EventsController : Controller
+    public class EventsController : ControllerBase
     {
         private readonly ILogger<EventsController> _logger;
         private readonly IEventsRepository _eventsRepo;
@@ -22,17 +25,20 @@ namespace Alterview.Web.Controllers
 
         [HttpGet]
         [Route("{id:int:min(1)}")]
-        public async Task<IActionResult> Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<SportEvent>> Get(int id)
         {
-            IActionResult result = BadRequest();
-
             var ev = await _eventsRepo.GetEventById(id);
 
             if (ev != null)
-                result = new JsonResult(ev);
-
-            return result;
+            {
+                return ev;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
-
 }

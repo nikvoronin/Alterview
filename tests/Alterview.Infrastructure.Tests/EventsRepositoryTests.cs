@@ -1,3 +1,4 @@
+﻿using Alterview.Core.Interfaces;
 using Alterview.Core.Models;
 using Alterview.Infrastructure.Data;
 using Moq;
@@ -18,6 +19,17 @@ namespace Alterview.Infrastructure.Tests
 
             var eventMock = new Mock<SportEvent>();
             Assert.ThrowsAsync<AggregateException>(async () => await repo.UpdateEvent(eventMock.Object));
+        }
+
+        [Fact]
+        public async void EventsRepository_UpdateEvent_NullArguments()
+        {
+            var evRepoMock = new Mock<IEventsRepository>();
+            evRepoMock.Setup(e => e.UpdateEvent(It.IsNotNull<SportEvent>())).ReturnsAsync(1);
+            evRepoMock.Setup(e => e.UpdateEvent(It.Is<SportEvent>(v => v == null))).ThrowsAsync(new ArgumentNullException("ev"));
+
+            Assert.True(1 == await evRepoMock.Object.UpdateEvent(new SportEvent()));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await evRepoMock.Object.UpdateEvent(null));
         }
     }
 }
