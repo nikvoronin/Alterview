@@ -1,0 +1,8 @@
+{
+    "MessageQueue": {
+        "Provider": "RabbitMq",
+        "Host": "localhost",
+        "Channel": "hare_mu001"
+    },
+    "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=LocalTestDatabase;Trusted_Connection=True;"
+}
