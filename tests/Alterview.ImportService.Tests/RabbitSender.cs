@@ -13,7 +13,7 @@ namespace Alterview.ImportService.Tests
 {
     public class RabbitSender
     {
-        static ILogger logger = LogFactory.GetFactory.CreateLogger(typeof(RabbitSender));
+        static ILogger log = LogFactory.GetFactory.CreateLogger(typeof(RabbitSender));
 
         string _host = "localhost";
         string _queue = "rabbit";
@@ -45,7 +45,7 @@ namespace Alterview.ImportService.Tests
 
             using var connection = factory.CreateConnection();
             
-            logger.LogInformation("Connected to AMQP broker");
+            log.LogInformation("Connected to AMQP broker");
             
             using var channel = connection.CreateModel();
             channel.QueueDeclare(
@@ -55,7 +55,7 @@ namespace Alterview.ImportService.Tests
                 autoDelete: false,
                 arguments: null);
 
-            logger.LogInformation("Channel open");
+            log.LogInformation("Channel open");
 
             long packetId = 0;
             var rnd = new Random(Environment.TickCount);
@@ -86,7 +86,7 @@ namespace Alterview.ImportService.Tests
                     basicProperties: null,
                     body: body);
 
-                logger.LogTrace($"<<- Sent {message} #{packetId} @{Environment.TickCount}");
+                log.LogTrace("<<- Sent {0} #{1} @{2}", message, packetId, Environment.TickCount);
 
                 Thread.Sleep(_interval < 0 ? 0 : _interval);
             }

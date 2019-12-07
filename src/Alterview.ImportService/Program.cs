@@ -9,7 +9,7 @@ namespace Alterview.ImportService
     class Program
     {
         public const string DefaultConfigFilename = "appconfig.json";
-        static ILogger logger = LogFactory.GetFactory.CreateLogger(typeof(Program));
+        static ILogger log = LogFactory.GetFactory.CreateLogger(typeof(Program));
 
         static IReadOnlyDictionary<string, string> DefaultConfigurationStrings { get; } =
             new Dictionary<string, string>
