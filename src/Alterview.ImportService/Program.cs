@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using Alterview.Core.Models;
 using Alterview.Infrastructure;
+using Alterview.Infrastructure.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -36,18 +39,25 @@ namespace Alterview.ImportService
             AppConfiguration config = GetConfiguration();
 
             // var testSender = new RabbitSender(config.MessageQueue.Host, config.MessageQueue.ChannelName, sendIntervalMs: 10);
-            // var dataReceiver = new RabbitReceiver(config.MessageQueue.Host, config.MessageQueue.ChannelName);
+
+            Func<byte[], SportEvent> messageParser = b => JsonSerializer.Deserialize<SportEvent>(b.AsSpan());
+
+            var dataReceiver = new RabbitReceiver<SportEvent>(
+                config.MessageQueue.Host,
+                config.MessageQueue.ChannelName,
+                messageParser
+                );
             // var channelPool = new ChannelPool(config.ConnectionString);
             // var eventExchanger = new EventExchanger(dataReceiver, channelPool);
 
             // eventExchanger.Start();
-            // dataReceiver.Start();
+            dataReceiver.Start();
             // testSender.Start();
 
             WaitForEnter("Enter to stop...");
 
             // testSender.Stop();
-            // dataReceiver.Stop();
+            dataReceiver.Stop();
             // eventExchanger.Stop();
 
             WaitForEnter("Enter to close application...");
