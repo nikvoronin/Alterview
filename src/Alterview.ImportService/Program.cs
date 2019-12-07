@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Alterview.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -8,6 +9,7 @@ namespace Alterview.ImportService
     class Program
     {
         public const string DefaultConfigFilename = "appconfig.json";
+        static ILogger logger = LogFactory.GetFactory.CreateLogger(typeof(Program));
 
         static IReadOnlyDictionary<string, string> DefaultConfigurationStrings { get; } =
             new Dictionary<string, string>
@@ -33,16 +35,10 @@ namespace Alterview.ImportService
         {
             AppConfiguration config = GetConfiguration();
 
-            var logFactory = LoggerFactory.Create(b => b
-                .AddConsole()
-                .SetMinimumLevel(LogLevel.Trace));
-
-            var log = logFactory.CreateLogger(typeof(Program));
-
-            // var testSender = new RabbitSender(config.MessageQueue.Host, config.MessageQueue.ChannelName, sendInterval: 10, logger: log);
-            // var dataReceiver = new RabbitReceiver(config.MessageQueue.Host, config.MessageQueue.ChannelName, logger: log);
-            // var channelPool = new ChannelPool(config.ConnectionString, logger: log);
-            // var eventExchanger = new EventExchanger(dataReceiver, channelPool, logger: log);
+            // var testSender = new RabbitSender(config.MessageQueue.Host, config.MessageQueue.ChannelName, sendInterval: 10);
+            // var dataReceiver = new RabbitReceiver(config.MessageQueue.Host, config.MessageQueue.ChannelName);
+            // var channelPool = new ChannelPool(config.ConnectionString);
+            // var eventExchanger = new EventExchanger(dataReceiver, channelPool);
 
             // eventExchanger.Start();
             // dataReceiver.Start();
