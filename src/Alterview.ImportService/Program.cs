@@ -35,14 +35,14 @@ namespace Alterview.ImportService
         {
             AppConfiguration config = GetConfiguration();
 
-            // var testSender = new RabbitSender(config.MessageQueue.Host, config.MessageQueue.ChannelName, sendInterval: 10);
+            // var testSender = new RabbitSender(config.MessageQueue.Host, config.MessageQueue.ChannelName, sendIntervalMs: 10);
             // var dataReceiver = new RabbitReceiver(config.MessageQueue.Host, config.MessageQueue.ChannelName);
             // var channelPool = new ChannelPool(config.ConnectionString);
             // var eventExchanger = new EventExchanger(dataReceiver, channelPool);
 
             // eventExchanger.Start();
             // dataReceiver.Start();
-            // autoSender.Start();
+            // testSender.Start();
 
             WaitForEnter("Enter to stop...");
 
