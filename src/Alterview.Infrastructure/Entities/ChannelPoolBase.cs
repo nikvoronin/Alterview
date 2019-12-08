@@ -6,6 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Alterview.Infrastructure.Entities
 {
+    /// <summary>
+    /// Pool of the data channels with tags
+    /// </summary>
+    /// <typeparam name="T">The type of the data message</typeparam>
+    /// <typeparam name="TTag">The type of the message tag. Message tag may not equal to the message.Id</typeparam>
     public abstract class ChannelPoolBase<T, TTag>
     {
         private static ILogger log = LogFactory.GetFactory.CreateLogger(typeof(ChannelPoolBase<T, TTag>));
@@ -14,9 +19,10 @@ namespace Alterview.Infrastructure.Entities
 
         private Dictionary<TTag, IDataChannel<T>> _links;
         private List<IDataChannel<T>> _pool;
-        protected IAsyncCommand<T> _outputCommand;
         private int _maxChannels = MaxChannels;
         private Random _rnd = new Random(Environment.TickCount);
+
+        protected IAsyncCommand<T> _outputCommand;
 
         public ChannelPoolBase(IAsyncCommand<T> outputCommand, int maxChannels = MaxChannels)
         {
@@ -35,6 +41,11 @@ namespace Alterview.Infrastructure.Entities
         private IDataChannel<T> RandomChannel => _pool[_rnd.Next(0, _pool.Count)];
         protected abstract IDataChannel<T> CreateChannel { get; }
 
+        /// <summary>
+        /// Find relevant channel for the give message or message tag
+        /// </summary>
+        /// <param name="tag">Tag assigned with message</param>
+        /// <returns>DataChannel relevant to the given tag</returns>
         public IDataChannel<T> FindRelevantChannel(TTag tag)
         {
             IDataChannel<T> channel = null;
@@ -53,6 +64,9 @@ namespace Alterview.Infrastructure.Entities
             return channel;
         }
 
+        /// <summary>
+        /// Abort all background data channels
+        /// </summary>
         public void AbortAll()
         {
             foreach (var channel in _pool)

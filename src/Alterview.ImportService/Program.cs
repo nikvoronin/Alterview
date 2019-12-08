@@ -65,13 +65,13 @@ namespace Alterview.ImportService
             dataReceiver.Start();
             // testSender.Start();
 
-            WaitForEnter("Enter to stop...");
+            WaitForEnter("Press Enter to stop service...");
 
             // testSender.Stop();
             dataReceiver.Stop();
             eventExchanger.Stop();
 
-            WaitForEnter("Enter to close application...");
+            WaitForEnter("Press Enter to close application...");
 
 
             void WaitForEnter(string message)

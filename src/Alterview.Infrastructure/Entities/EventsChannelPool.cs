@@ -6,6 +6,9 @@ using Alterview.Core.Models;
 
 namespace Alterview.Infrastructure.Entities
 {
+    /// <summary>
+    /// ChannelPool for SportEvent with integer Id
+    /// </summary>
     public class EventsChannelPool : ChannelPoolBase<SportEvent, int>
     {
         public EventsChannelPool(IAsyncCommand<SportEvent> outputCommand, int maxChannels = MaxChannels) : base(outputCommand, maxChannels) { }

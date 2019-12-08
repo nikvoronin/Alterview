@@ -9,6 +9,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Alterview.Infrastructure.Entities
 {
+    /// <summary>
+    /// Multithreaded data channel for consume-produce data from source to the taret
+    /// </summary>
+    /// <typeparam name="T">The type of the data message</typeparam>
     public sealed class DataChannel<T> : IDataChannel<T>, IDisposable
     {
         private static ILogger log = LogFactory.GetFactory.CreateLogger(typeof(DataChannel<T>));
@@ -22,11 +26,18 @@ namespace Alterview.Infrastructure.Entities
         private IAsyncCommand<T> _repoCommand;
         public Thread Worker { get; private set; }
 
+        /// <summary>
+        /// Unique identificator of the channel
+        /// </summary>
         public int Id { get; private set; }
 
         private static int _autoIncId = 0;
         private static int AutoIncId => ++_autoIncId;
 
+        /// <summary>
+        /// DataChannel
+        /// </summary>
+        /// <param name="outputDataCommand">AsyncCommand that sends data to the target</param>
         public DataChannel(IAsyncCommand<T> outputDataCommand)
         {
             if (outputDataCommand == null)
@@ -55,6 +66,11 @@ namespace Alterview.Infrastructure.Entities
             Worker.Start();
         }
 
+        /// <summary>
+        /// Synchronous receive data message then push it through message channel
+        /// </summary>
+        /// <param name="ev">Data Message</param>
+        /// <returns>True if done but without any guarantee of delivering to the target</returns>
         public bool PushData(T ev)
         {
             TryStart();
@@ -106,6 +122,9 @@ namespace Alterview.Infrastructure.Entities
             log.LogDebug("Channel# {0} task ended", Id);
         }
 
+        /// <summary>
+        /// Abort background message delivering
+        /// </summary>
         public void Abort()
         {
             _cts?.Cancel();

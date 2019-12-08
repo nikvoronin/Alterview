@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Alterview.Infrastructure.Entities
 {
+    /// <summary>
+    /// Redirect messages from source to target through several data channels
+    /// </summary>
     public class EventsExchange
     {
         private static ILogger log = LogFactory.GetFactory.CreateLogger(typeof(EventsExchange));
@@ -22,6 +25,9 @@ namespace Alterview.Infrastructure.Entities
             _pool = pool;
         }
 
+        /// <summary>
+        /// Start exchange service
+        /// </summary>
         public void Start()
         {
             if (_dataSource != null)
@@ -30,6 +36,9 @@ namespace Alterview.Infrastructure.Entities
             }
         }
 
+        /// <summary>
+        /// Stop exchange service
+        /// </summary>
         public void Stop()
         {
             if (_dataSource != null)
