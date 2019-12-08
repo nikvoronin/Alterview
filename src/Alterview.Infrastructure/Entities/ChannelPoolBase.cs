@@ -13,14 +13,14 @@ namespace Alterview.Infrastructure.Entities
     /// <typeparam name="TTag">The type of the message tag. Message tag may not equal to the message.Id</typeparam>
     public abstract class ChannelPoolBase<T, TTag>
     {
-        private static ILogger log = LogFactory.GetFactory.CreateLogger(typeof(ChannelPoolBase<T, TTag>));
+        protected static ILogger log = LogFactory.GetFactory.CreateLogger(typeof(ChannelPoolBase<T, TTag>));
 
         public const int MaxChannels = 20;
 
-        private Dictionary<TTag, IDataChannel<T>> _links;
-        private List<IDataChannel<T>> _pool;
-        private int _maxChannels = MaxChannels;
-        private Random _rnd = new Random(Environment.TickCount);
+        protected Dictionary<TTag, IDataChannel<T>> _links;
+        protected List<IDataChannel<T>> _pool;
+        protected int _maxChannels = MaxChannels;
+        protected Random _rnd = new Random(Environment.TickCount);
 
         protected IAsyncCommand<T> _outputCommand;
 
@@ -38,7 +38,7 @@ namespace Alterview.Infrastructure.Entities
             _links = new Dictionary<TTag, IDataChannel<T>>();
         }
 
-        private IDataChannel<T> RandomChannel => _pool[_rnd.Next(0, _pool.Count)];
+        protected IDataChannel<T> RandomChannel => _pool[_rnd.Next(0, _pool.Count)];
         protected abstract IDataChannel<T> CreateChannel { get; }
 
         /// <summary>
@@ -46,23 +46,7 @@ namespace Alterview.Infrastructure.Entities
         /// </summary>
         /// <param name="tag">Tag assigned with message</param>
         /// <returns>DataChannel relevant to the given tag</returns>
-        public IDataChannel<T> FindRelevantChannel(TTag tag)
-        {
-            IDataChannel<T> channel = null;
-
-            log.LogDebug("Searching for relevant channel with eventId:{0}", tag);
-
-            if (!_links.TryGetValue(tag, out channel))
-            {
-                channel = (_pool.Count < _maxChannels) ? CreateChannel : RandomChannel;
-                _pool.Add(channel);
-                _links.Add(tag, channel);
-
-                log.LogDebug("Founded channel {0} for tag {1}", channel.Id, tag);
-            }
-
-            return channel;
-        }
+        public abstract IDataChannel<T> FindRelevantChannel(T message, TTag tag);
 
         /// <summary>
         /// Abort all background data channels

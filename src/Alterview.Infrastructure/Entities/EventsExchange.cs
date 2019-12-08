@@ -53,7 +53,7 @@ namespace Alterview.Infrastructure.Entities
         {
             IDataChannel<SportEvent> channel = null;
 
-            channel = _pool.FindRelevantChannel(ev.EventId);
+            channel = _pool.FindRelevantChannel(ev, ev.EventId);
             if (channel != null)
             {
                 bool done = channel.PushData(ev);

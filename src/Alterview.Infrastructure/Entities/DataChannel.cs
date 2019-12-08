@@ -114,7 +114,7 @@ namespace Alterview.Infrastructure.Entities
                     }
                 }
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 log.LogDebug("Channel# {0} task canceled", Id);
             }
