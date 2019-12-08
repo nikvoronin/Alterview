@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Alterview.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -11,7 +12,7 @@ namespace Alterview.Infrastructure.Data
     /// RabbitMq consumer and message converter
     /// </summary>
     /// <typeparam name="T">Output message format</typeparam>
-    public class RabbitReceiver<T>
+    public class RabbitReceiver<T> : IExternalDataSource<T>
     {
         static ILogger log = LogFactory.GetFactory.CreateLogger(typeof(RabbitReceiver<T>));
 
@@ -129,8 +130,6 @@ namespace Alterview.Infrastructure.Data
             var evh = MessageReceive;
             evh?.Invoke(this, message);
         }
-
-        public enum AckStatus { Ack, Reject }
 
         /// <summary>
         /// Callback for deferred message acknowledge
