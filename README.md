@@ -6,7 +6,7 @@
 
 ## Agenda
 
-1. Project strucutre
+1. Project structure
 1. Database schema
 1. WebApi
 1. Import service
