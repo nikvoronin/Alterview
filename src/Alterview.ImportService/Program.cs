@@ -52,11 +52,13 @@ namespace Alterview.ImportService
                 messageParser
                 );
 
-            IEventsRepository eventsRepo = new EventsRepository(config.ConnectionString);
+            var eventsRepo = new EventsRepository(config.ConnectionString);
 
             var channelPool = new EventsChannelPool(
-                ev => eventsRepo.UpdateEvent(ev).Result, // TODO change to command
-                config.ChannelPool.MaxChannels);
+                eventsRepo.CreateUpdateCommand(),
+                config.ChannelPool.MaxChannels
+                );
+            
             var eventExchanger = new EventsExchange(dataReceiver, channelPool);
 
             eventExchanger.Start();
