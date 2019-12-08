@@ -10,7 +10,6 @@ namespace Alterview.Infrastructure.Entities
     {
         public EventsChannelPool(IAsyncCommand<SportEvent> outputCommand, int maxChannels = MaxChannels) : base(outputCommand, maxChannels) { }
 
-        // TODO new DataChannel()
-        protected override IDataChannel<SportEvent> CreateChannel => null;// new DataChannel<SportEvent>(outputCommand);
+        protected override IDataChannel<SportEvent> CreateChannel => new DataChannel<SportEvent>(_outputCommand);
     }
 }
