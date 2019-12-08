@@ -14,19 +14,19 @@ namespace Alterview.Infrastructure.Entities
 
         private Dictionary<TTag, IDataChannel<T>> _links;
         private List<IDataChannel<T>> _pool;
-        private protected Func<T, int> _outputData;
+        protected IAsyncCommand<T> _outputCommand;
         private int _maxChannels = MaxChannels;
         private Random _rnd = new Random(Environment.TickCount);
 
-        public ChannelPoolBase(Func<T, int> outputData, int maxChannels = MaxChannels)
+        public ChannelPoolBase(IAsyncCommand<T> outputCommand, int maxChannels = MaxChannels)
         {
-            if (outputData == null)
+            if (outputCommand == null)
             {
                 throw new ArgumentNullException();
             }
 
             _maxChannels = maxChannels;
-            _outputData = outputData;
+            _outputCommand = outputCommand;
 
             _pool = new List<IDataChannel<T>>(_maxChannels);
             _links = new Dictionary<TTag, IDataChannel<T>>();
