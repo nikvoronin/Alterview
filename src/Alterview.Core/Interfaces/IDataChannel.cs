@@ -8,5 +8,6 @@ namespace Alterview.Core.Interfaces
     {
         int Id { get; }
         bool PushData(T data);
+        void Abort();
     }
 }
