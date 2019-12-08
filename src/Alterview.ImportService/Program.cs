@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Alterview.Core.Interfaces;
 using Alterview.Core.Models;
 using Alterview.Infrastructure;
 using Alterview.Infrastructure.Data;
+using Alterview.Infrastructure.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -21,6 +24,7 @@ namespace Alterview.ImportService
                 {"MessageQueue:Provider", "RabbitMq" },
                 {"MessageQueue:Host", "localhost" },
                 {"MessageQueue:Channel", "hare_mu001" },
+                {"ChannelPool:MaxChannels", "20" },
             };
 
         static AppConfiguration GetConfiguration()
@@ -47,10 +51,15 @@ namespace Alterview.ImportService
                 config.MessageQueue.ChannelName,
                 messageParser
                 );
-            // var channelPool = new ChannelPool(config.ConnectionString);
-            // var eventExchanger = new EventExchanger(dataReceiver, channelPool);
 
-            // eventExchanger.Start();
+            IEventsRepository eventsRepo = new EventsRepository(config.ConnectionString);
+
+            var channelPool = new EventsChannelPool(
+                ev => eventsRepo.UpdateEvent(ev).Result, // TODO change to command
+                config.ChannelPool.MaxChannels);
+            var eventExchanger = new EventsExchange(dataReceiver, channelPool);
+
+            eventExchanger.Start();
             dataReceiver.Start();
             // testSender.Start();
 
@@ -58,7 +67,7 @@ namespace Alterview.ImportService
 
             // testSender.Stop();
             dataReceiver.Stop();
-            // eventExchanger.Stop();
+            eventExchanger.Stop();
 
             WaitForEnter("Enter to close application...");
 

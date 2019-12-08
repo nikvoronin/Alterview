@@ -7,6 +7,11 @@ namespace Alterview.ImportService
     public class AppConfiguration
     {
         public string ConnectionString { get; set; }
+        public DataChannelPool ChannelPool { get; set; }
+        public class DataChannelPool
+        {
+            public int MaxChannels { get; set; }
+        }
 
         public ExternalDataSource MessageQueue { get; set; }
         public class ExternalDataSource

@@ -4,5 +4,8 @@
         "Host": "localhost",
         "Channel": "hare_mu001"
     },
-    "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=LocalTestDatabase;Trusted_Connection=True;"
+    "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=LocalTestDatabase;Trusted_Connection=True;",
+    "ChannelPool": {
+        "MaxChannels": 20
+    }
 }
