@@ -36,3 +36,14 @@
   - `Alterview.Web`. WebApi service based on `Kestrel` web server.
 - __/tests__. Unit tests.
 - __/build__. Build folder for binaries and assemblies.
+
+## WebApi
+
+### Sports
+
+- `/api/sports`. Returns list of the sports with events count linked to sport.
+- `/api/sports/{sport-id}/events/date/{date}`. Returns list of events by `sport-id` for the given `date`. Ex.: `/api/sports/149/events/date/2019-12-16`.
+
+### Events
+
+- `/api/events/{event-id}`. Returns event description by `event-id`.
