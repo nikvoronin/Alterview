@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Alterview.Core.Interfaces;
 using Alterview.Core.Models;
+using Alterview.Infrastructure.Commands;
 using Dapper;
 
 namespace Alterview.Infrastructure.Data
@@ -97,10 +98,10 @@ namespace Alterview.Infrastructure.Data
 
             string query =
                 "CREATE TABLE [dbo].[Events] (" +
-                " [EventId]    INT NOT NULL," +
+                " [EventId] INT NOT NULL," +
                 " [SportId] INT NOT NULL," +
-                " [EventName] NVARCHAR(50)   NOT NULL," +
-                " [EventDate] DATETIME2(7)   NOT NULL," +
+                " [EventName] NVARCHAR(50) NOT NULL," +
+                " [EventDate] DATETIME2(7) NOT NULL," +
                 " [Team1Price] DECIMAL(18, 2) NOT NULL," +
                 " [DrawPrice]  DECIMAL(18, 2) NOT NULL," +
                 " [Team2Price] DECIMAL(18, 2) NOT NULL," +
@@ -115,6 +116,11 @@ namespace Alterview.Infrastructure.Data
             catch { }
 
             return result;
+        }
+
+        public IAsyncCommand<SportEvent> CreateUpdateCommand()
+        {
+            return new UpdateEventCommand(this);
         }
     }
 }
