@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Alterview.Core.Interfaces;
 using Alterview.Core.Models;
+using Alterview.Infrastructure.Commands;
 using Dapper;
 
 namespace Alterview.Infrastructure.Data
@@ -115,6 +116,11 @@ namespace Alterview.Infrastructure.Data
             catch { }
 
             return result;
+        }
+
+        public IAsyncCommand<SportEvent> CreateUpdateCommand()
+        {
+            return new UpdateEventCommand(this);
         }
     }
 }
