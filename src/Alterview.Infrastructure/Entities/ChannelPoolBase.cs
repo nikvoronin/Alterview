@@ -38,8 +38,13 @@ namespace Alterview.Infrastructure.Entities
             _links = new Dictionary<TTag, IDataChannel<T>>();
         }
 
-        protected IDataChannel<T> RandomChannel => _pool[_rnd.Next(0, _pool.Count)];
         protected abstract IDataChannel<T> CreateChannel { get; }
+
+        protected void AddChannel(IDataChannel<T> channel, TTag tag)
+        {
+            _pool.Add(channel);
+            _links.Add(tag, channel);
+        }
 
         /// <summary>
         /// Find relevant channel for the give message or message tag
