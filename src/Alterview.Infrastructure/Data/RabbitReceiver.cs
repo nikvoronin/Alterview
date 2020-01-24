@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Alterview.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -22,7 +20,7 @@ namespace Alterview.Infrastructure.Data
         private IConnection _connection;
         private IModel _channel;
         private Func<byte[], T> _messageParser;
-        private EventingBasicConsumer consumer;
+        private EventingBasicConsumer _consumer;
 
         public readonly bool ManualAcknowledgement = false;
 
@@ -77,44 +75,62 @@ namespace Alterview.Infrastructure.Data
                 autoDelete: false,
                 arguments: null);
 
-            consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += Consumer_Received;
+            _consumer = new EventingBasicConsumer(_channel);
+            _consumer.Received += Consumer_Received;
 
             _channel.BasicConsume(
                 queue: _queue,
                 autoAck: false,
-                consumer: consumer);
+                consumer: _consumer);
 
             return true;
         }
 
-        private void Consumer_Received(object sender, BasicDeliverEventArgs ea)
+        private bool TryConvert(byte[] originalMessage, out T export)
         {
-            var body = ea.Body;
-            var message = Encoding.UTF8.GetString(body);
+            try // we do not trust to unknown funcs
+            {
+                export = _messageParser(originalMessage);
+                return true;
+            }
+            catch
+            {
+                log.LogTrace("Cannot parse rabbit message");
+
+                export = default;
+                return false;
+            }
+        }
+
+        private void AckRabbitMessage(ulong deliveryTag)
+        {
+            if (ManualAcknowledgement)
+            {
+                return;
+            }
 
             try
-            { // we do not trust to unknown funcs
-                var export = _messageParser(ea.Body);
-
-                if (export != null)
-                {
-                    if (!ManualAcknowledgement)
-                    {
-                        _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
-
-                        log.LogTrace("BasicAck tag#:{0}", ea.DeliveryTag);
-                    }
-
-                    log.LogDebug($"->{(ea.Redelivered ? "r" : ">")} Received @{Environment.TickCount}");
-
-                    OnMessageReceive(export);
-                }
+            {
+                _channel.BasicAck(deliveryTag: deliveryTag, multiple: false);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                log.LogTrace(ex.Message);
             }
+
+            log.LogTrace("BasicAck tag#:{0}", deliveryTag);
+        }
+
+        private void Consumer_Received(object sender, BasicDeliverEventArgs ea)
+        {
+            AckRabbitMessage(ea.DeliveryTag);
+
+            if (TryConvert(ea.Body, out var export))
+            {
+                OnMessageReceive(export);
+            }
+
+            log.LogTrace($"->{(ea.Redelivered ? "r" : ">")} Received @{Environment.TickCount}");
         }
 
         /// <summary>
