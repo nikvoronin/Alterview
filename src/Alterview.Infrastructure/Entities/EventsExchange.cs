@@ -58,7 +58,7 @@ namespace Alterview.Infrastructure.Entities
             {
                 bool done = channel.PushData(ev);
 
-                log.LogDebug("Receve new event #{0} at @{1}", ev.EventId, Environment.TickCount);
+                log.LogTrace("Receve new event #{0} at @{1}", ev.EventId, Environment.TickCount);
             }
         }
     }
